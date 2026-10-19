@@ -2,7 +2,8 @@
 
 Catálogo web interactivo para **Grupo FLIX**, diseñado para exhibir de manera elegante y funcional sus proyectos de arquitectura de alta gama. Presenta un recorrido fluido desde una vista general de los desarrollos hasta el detalle técnico, visual y espacial de cada obra.
 
- *(Nota: podés reemplazar este enlace por la captura real de tu proyecto)*
+<img width="1318" height="668" alt="image" src="https://github.com/user-attachments/assets/ec581c87-dbd7-4915-9ae6-5fc36e6b2728" />
+
 
 ## 🎯 Objetivo del proyecto
 
