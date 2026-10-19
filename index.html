@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Arquitectura - Grupo FLIX</title>
+    <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+
+    <!-- VISTA PRINCIPAL: GRID DE PROYECTOS -->
+    <main id="vista-catalogo" class="contenedor">
+        <h1 class="titulo-seccion">Diseños Arquitectónicos</h1>
+        <div class="grid-proyectos" id="grid-proyectos"></div>
+    </main>
+
+    <!-- VISTA DETALLE (oculta por defecto) -->
+    <section id="vista-detalle" class="contenedor oculto">
+        <button class="btn-volver" onclick="volverCatalogo()">← Volver al catálogo</button>
+        <h2 id="detalle-titulo">Nombre del Proyecto</h2>
+
+        <!-- Pestañas -->
+        <div class="tabs">
+            <button class="tab-btn activa" data-tab="galeria" onclick="cambiarTab('galeria')">Galería</button>
+            <button class="tab-btn" data-tab="memoria" onclick="cambiarTab('memoria')">Memoria Descriptiva</button>
+        </div>
+
+        <!-- Pestaña 1: Galería -->
+        <div id="tab-galeria" class="tab-panel activo">
+            <div class="galeria-detalle"></div>
+        </div>
+
+        <!-- Pestaña 2: Memoria Descriptiva (texto + planos) -->
+        <div id="tab-memoria" class="tab-panel">
+            <div class="seccion-planos">
+                <h3>Memoria Descriptiva</h3>
+                <div id="memoria-descriptiva-contenido" class="memoria-texto"></div>
+
+                <h3>Documentación y Planos</h3>
+                <p>Explora la distribución de los espacios y la planimetría del proyecto.</p>
+                <div class="grid-planos"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="lightbox oculto">
+        <span class="cerrar-lightbox" onclick="cerrarLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Imagen ampliada">
+    </div>
+
+    <script src="proyectos.js"></script>
+    <script>
+    const vistaCatalogo = document.getElementById('vista-catalogo');
+    const vistaDetalle = document.getElementById('vista-detalle');
+    const detalleTitulo = document.getElementById('detalle-titulo');
+    const contenedorGaleria = document.querySelector('.galeria-detalle');
+    const contenedorPlanos = document.querySelector('.grid-planos');
+    const contenedorMemoria = document.getElementById('memoria-descriptiva-contenido');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    const rutas = (c, prefijo, n) =>
+        Array.from({ length: n }, (_, i) => `img/${c}/${prefijo}-${i + 1}.jpg`);
+
+    function renderCatalogo() {
+        const grid = document.getElementById('grid-proyectos');
+        PROYECTOS.forEach(p => {
+            const t = document.createElement('div');
+            t.className = 'tarjeta';
+            t.onclick = () => abrirProyecto(p.carpeta);
+            t.innerHTML = `
+                <img src="img/${p.carpeta}/portada.jpg" alt="${p.titulo}">
+                <div class="tarjeta-info"><h3>${p.resumen}</h3><p>${p.detalle}</p></div>`;
+            grid.appendChild(t);
+        });
+    }
+    renderCatalogo();
+
+    function cargarImagenes(contenedor, arrayRutas, esPlano = false) {
+        contenedor.innerHTML = '';
+        arrayRutas.forEach(ruta => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'img-wrapper';
+            const img = document.createElement('img');
+            img.src = ruta;
+            img.alt = 'Imagen del proyecto';
+            img.onerror = () => wrapper.style.display = 'none';
+            img.onclick = () => abrirLightbox(ruta, esPlano);
+            wrapper.appendChild(img);
+            contenedor.appendChild(wrapper);
+        });
+    }
+
+    function renderMemoria(m) {
+        if (!m) return '<p>Memoria descriptiva no disponible.</p>';
+        if (typeof m === 'string') return `<p>${m}</p>`;
+        let h = '';
+        if (m.descripcion) h += `<p>${m.descripcion}</p>`;
+        if (m.ficha) h += '<div class="ficha">' + m.ficha.map(([k, v]) =>
+            `<div class="ficha-item"><span>${k}</span><strong>${v}</strong></div>`).join('') + '</div>';
+        if (m.programa) h += '<h4>Programa de ambientes</h4><div class="programa">' + m.programa.map(n =>
+            `<div class="programa-nivel"><h5>${n.nivel}</h5><ul>${n.ambientes.map(a => `<li>${a}</li>`).join('')}</ul></div>`).join('') + '</div>';
+        if (m.secciones) h += '<h4>Especificaciones técnicas</h4><div class="acordeon">' + m.secciones.map(x =>
+            `<details><summary>${x.titulo}</summary><p>${x.texto}</p></details>`).join('') + '</div>';
+        if (m.incluye || m.noIncluye) {
+            const lista = (t, cls, arr) => arr ? `<div class="${cls}"><h5>${t}</h5><ul>${arr.map(i => `<li>${i}</li>`).join('')}</ul></div>` : '';
+            h += '<h4>Alcances</h4><div class="alcances">' + lista('Incluye', 'si', m.incluye) + lista('No incluye', 'no', m.noIncluye) + '</div>';
+        }
+        h += '<p class="nota-legal">La documentación es de carácter informativo y puede sufrir variaciones durante el transcurso de la obra.</p>';
+        return h;
+    }
+
+    function cambiarTab(nombre) {
+        document.querySelectorAll('.tab-btn').forEach(b =>
+            b.classList.toggle('activa', b.dataset.tab === nombre));
+        document.querySelectorAll('.tab-panel').forEach(p =>
+            p.classList.toggle('activo', p.id === 'tab-' + nombre));
+    }
+
+    function abrirProyecto(id) {
+        const p = PROYECTOS.find(x => x.carpeta === id);
+        if (!p) return;
+        detalleTitulo.textContent = p.titulo;
+        contenedorMemoria.innerHTML = renderMemoria(p.memoria);
+        cargarImagenes(contenedorGaleria, rutas(id, 'galeria', p.galeria), false);
+        cargarImagenes(contenedorPlanos, rutas(id, 'plano', p.planos), true);
+        cambiarTab('galeria');
+        vistaCatalogo.classList.add('oculto');
+        vistaDetalle.classList.remove('oculto');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function volverCatalogo() {
+        vistaDetalle.classList.add('oculto');
+        vistaCatalogo.classList.remove('oculto');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function abrirLightbox(ruta, esPlano) {
+        lightboxImg.src = ruta;
+        lightboxImg.style.background = esPlano ? '#fff' : 'transparent';
+        lightbox.classList.remove('oculto');
+        setTimeout(() => lightbox.classList.add('activo'), 10);
+    }
+
+    function cerrarLightbox() {
+        lightbox.classList.remove('activo');
+        setTimeout(() => lightbox.classList.add('oculto'), 400);
+    }
+
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) cerrarLightbox(); });
+    </script>
+</body>
+</html>

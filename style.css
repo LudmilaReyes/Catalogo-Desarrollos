@@ -1,0 +1,400 @@
+/* ==========================================================
+   CATÁLOGO DE ARQUITECTURA — Identidad Grupo FLIX Premium
+   ========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+    --flix-gold: #D4AF37;
+    --flix-gold-dark: #AA8C2C;
+    --flix-gold-light: #FEF08A;
+    --flix-black: #0A0A0A;
+    --flix-darkgray: #1A1A1A;
+    --flix-gray: #333333;
+    
+    --color-texto: #E5E5E5;
+    --color-texto-suave: #9CA3AF;
+
+    --radio: 16px;          
+    --radio-grande: 24px;   
+    --recorte: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%); 
+
+    --fuente-display: 'Archivo', sans-serif;
+    --fuente-cuerpo: 'Public Sans', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    position: relative;
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--fuente-cuerpo);
+    color: var(--color-texto);
+    background-color: var(--flix-black);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Efectos de luz traseros (Blobs) */
+body::before, body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+}
+body::before {
+    top: -10vh; left: -10vw;
+    width: 40vw; height: 40vw;
+    background: var(--flix-gold);
+    opacity: 0.08;
+    animation: blob 12s infinite ease-in-out;
+}
+body::after {
+    bottom: -10vh; right: -10vw;
+    width: 35vw; height: 35vw;
+    background: var(--flix-gold-dark);
+    opacity: 0.08;
+    animation: blob 12s infinite ease-in-out 4s;
+}
+@keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, -30px) scale(1.05); }
+}
+
+.contenedor {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 24px;
+}
+
+/* Títulos */
+.titulo-seccion, #detalle-titulo, .seccion-planos h3 {
+    font-family: var(--fuente-display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: #fff;
+}
+.titulo-seccion {
+    margin: 0 0 64px;
+    text-align: center;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    background: linear-gradient(90deg, var(--flix-gold), var(--flix-gold-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.titulo-seccion::before {
+    content: "Grupo FLIX · Catálogo";
+    display: block;
+    margin-bottom: 12px;
+    font-family: var(--fuente-cuerpo);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--flix-gold);
+    -webkit-text-fill-color: var(--flix-gold);
+}
+#detalle-titulo {
+    margin: 0 0 36px;
+    font-size: clamp(1.8rem, 4vw, 2.75rem);
+}
+#detalle-titulo::after {
+    content: "";
+    display: block;
+    width: 64px; height: 4px;
+    margin-top: 16px;
+    border-radius: 999px;
+    background: var(--flix-gold);
+}
+
+/* Grid Principal */
+.grid-proyectos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 32px;
+}
+
+/* Tarjetas Premium */
+.tarjeta {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: var(--radio);
+    background: var(--flix-darkgray);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tarjeta:hover {
+    transform: translateY(-6px);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.08);
+}
+.tarjeta img {
+    display: block;
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    filter: brightness(0.8) contrast(1.1);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+.tarjeta:hover img {
+    transform: scale(1.06);
+    filter: brightness(1) contrast(1);
+}
+
+.tarjeta-info {
+    position: relative;
+    padding: 32px 28px;
+    background: linear-gradient(to top, var(--flix-darkgray) 80%, transparent);
+    z-index: 1;
+    margin-top: -40px; /* Crea una superposición elegante */
+}
+.tarjeta-info::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 28px;
+    width: 40px; height: 4px;
+    border-radius: 999px;
+    background: var(--flix-gold);
+}
+.tarjeta-info h3 {
+    margin: 0 0 8px;
+    font-size: 1.4rem;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+.tarjeta:hover .tarjeta-info h3 { color: var(--flix-gold-light); }
+.tarjeta-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-texto-suave);
+}
+.tarjeta-info::after {
+    content: "Explorar Proyecto \2192";
+    display: block;
+    margin-top: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--flix-gold);
+    transition: transform 0.3s ease;
+}
+.tarjeta:hover .tarjeta-info::after { transform: translateX(6px); }
+
+/* Botones */
+.btn-volver, .btn-accion {
+    display: inline-block;
+    font-family: var(--fuente-display);
+    font-weight: 700;
+    cursor: pointer;
+    clip-path: var(--recorte);
+    transition: all 0.3s ease;
+    border: none;
+}
+.btn-volver {
+    margin-bottom: 40px;
+    padding: 14px 32px;
+    font-size: 0.95rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+.btn-volver:hover {
+    background: var(--flix-gray);
+    transform: translateX(-4px);
+}
+.btn-accion {
+    margin-top: 36px;
+    padding: 16px 40px;
+    font-size: 1rem;
+    color: var(--flix-black);
+    background: var(--flix-gold);
+}
+.btn-accion:hover {
+    background: #fff;
+    transform: translateY(-3px);
+}
+
+/* =========================================================
+   GALERÍA DE DETALLE (Imágenes de vista previa más grandes)
+   ========================================================= */
+.galeria-detalle {
+    display: grid;
+    /* Aumentamos el ancho mínimo a 400px para que sean más grandes */
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 32px; /* Un poco más de espacio entre ellas para equilibrar el tamaño */
+    margin-bottom: 56px;
+}
+
+.galeria-detalle .img-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radio); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--flix-darkgray);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.galeria-detalle .img-wrapper:hover {
+    transform: translateY(-6px);
+    border-color: rgba(212, 175, 55, 0.5); 
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(212, 175, 55, 0.1);
+}
+
+.galeria-detalle img {
+    display: block;
+    width: 100%;
+    /* Aumentamos la altura a 380px para que la previsualización sea enorme */
+    height: 380px; 
+    object-fit: cover;
+    cursor: zoom-in;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+}
+
+.galeria-detalle .img-wrapper:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.1);
+}
+
+/* Ajuste importante para teléfonos móviles */
+@media (max-width: 768px) {
+    .galeria-detalle {
+        /* En celulares forzamos a que ocupen el 100% del ancho de la pantalla */
+        grid-template-columns: 1fr; 
+    }
+    .galeria-detalle img {
+        /* Reducimos un poco la altura en celulares para que entre en la pantalla */
+        height: 300px; 
+    }
+}
+/* Planos */
+.seccion-planos {
+    position: relative;
+    padding: clamp(32px, 5vw, 64px);
+    border-radius: var(--radio-grande);
+    background: var(--flix-darkgray);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.grid-planos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+.grid-planos img {
+    width: 100%;
+    border-radius: 12px;
+    cursor: zoom-in;
+    filter: grayscale(80%) opacity(0.8);
+    transition: all 0.4s ease;
+}
+.grid-planos img:hover {
+    filter: grayscale(0%) opacity(1);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+/* =========================================================
+   LIGHTBOX PREMIUM (Modal para agrandar imágenes)
+   ========================================================= */
+.lightbox {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(12px); /* Efecto cristal premium */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+.lightbox.activo {
+    opacity: 1;
+    pointer-events: auto;
+}
+.lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    transform: scale(0.9);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lightbox.activo img {
+    transform: scale(1);
+}
+.cerrar-lightbox {
+    position: absolute;
+    top: 24px; right: 40px;
+    font-size: 56px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 300;
+    line-height: 1;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.cerrar-lightbox:hover {
+    color: var(--flix-gold);
+    transform: scale(1.1) rotate(90deg);
+}
+
+.oculto { display: none !important; }
+
+        /* Estilos de las pestañas (puedes moverlos a style.css) */
+        .tabs { display: flex; gap: 8px; margin: 24px 0; border-bottom: 1px solid #333; }
+        .tab-btn {
+            background: none; border: none; color: #aaa; cursor: pointer;
+            padding: 12px 20px; font: inherit; font-weight: 700;
+            border-bottom: 3px solid transparent; margin-bottom: -1px;
+            transition: color .2s, border-color .2s;
+        }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.activa { color: #d4a62a; border-bottom-color: #d4a62a; }
+        .tab-panel { display: none; }
+        .tab-panel.activo { display: block; }
+        .memoria-texto { margin-bottom: 32px; line-height: 1.7; }
+
+        /* Memoria descriptiva estructurada */
+        .ficha { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 16px 0 28px; }
+        .ficha-item { background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; }
+        .ficha-item span { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #d4a62a; margin-bottom: 4px; }
+        .ficha-item strong { font-weight: 600; }
+        .memoria-texto h4 { color: #d4a62a; margin: 28px 0 10px; font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; }
+        .programa { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+        .programa-nivel { background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+        .programa-nivel h5 { margin: 0 0 8px; }
+        .programa-nivel ul, .alcances ul { margin: 0; padding-left: 18px; line-height: 1.6; }
+        .acordeon details { border-bottom: 1px solid #2a2a2a; padding: 12px 0; }
+        .acordeon summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; }
+        .acordeon summary::after { content: '+'; color: #d4a62a; font-size: 1.2rem; }
+        .acordeon details[open] summary::after { content: '–'; }
+        .acordeon details p { margin: 10px 0 0; color: #ccc; }
+        .alcances { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .alcances > div { background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+        .alcances h5 { margin: 0 0 8px; }
+        .alcances .si h5 { color: #6fcf97; } .alcances .no h5 { color: #eb8f8f; }
+        .nota-legal { font-size: .8rem; color: #888; margin-top: 24px; }
+
+@media (max-width: 768px) {
+    .contenedor { padding: 48px 20px; }
+    .galeria-detalle img { height: 280px; }
+    .cerrar-lightbox { top: 16px; right: 24px; font-size: 48px; }
+}
